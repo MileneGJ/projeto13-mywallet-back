@@ -33,8 +33,6 @@ export async function verifyUser (req, res) {
                 userId: foundUser._id,
                 token
             })
-            
-            client.close()
             return res.status(200).send({
                 user: foundUser._id,
                 token
