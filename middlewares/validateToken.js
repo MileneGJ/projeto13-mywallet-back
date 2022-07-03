@@ -1,4 +1,4 @@
-import db from "../databases/mongodb";
+import db from "../databases/mongodb.js";
 import {next} from 'express';
 
 export default async function validateToken (req,res) {

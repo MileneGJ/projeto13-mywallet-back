@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import {next} from 'express';
-import userSchema from "../schemas/newUserSchema";
+import userSchema from "../schemas/newUserSchema.js";
 
 export default function validateUser (req,res) {
     const validation = userSchema.validate(req.body);

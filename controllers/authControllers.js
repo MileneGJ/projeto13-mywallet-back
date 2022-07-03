@@ -1,8 +1,6 @@
-import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 import db from '../databases/mongodb.js';
 
-export async function createUser (req, res) {
+export async function createUser(_, res) {
     try {
         await db.collection("users").insertOne(res.locals.newUser);
         res.sendStatus(201);
@@ -12,27 +10,12 @@ export async function createUser (req, res) {
     }
 }
 
-export async function verifyUser (req, res) {
+export async function signInUser(_, res) {
     try {
-        const foundUser = await db.collection("users").findOne({
-            email: req.body.email
+        await db.collection("sessions").insertOne(res.locals.userSession)
+        return res.status(200).send({
+            token:res.locals.userSession.token
         });
-
-        if (foundUser && bcrypt.compareSync(req.body.password, foundUser.password)) {
-            const token = uuidv4();
-
-            await db.collection("sessions").insertOne({
-                userId: foundUser._id,
-                token
-            })
-            return res.status(200).send({
-                user: foundUser._id,
-                token
-            });
-            
-        } else {
-            return res.status(401).send("E-mail ou senha incorretos")
-        }
     } catch (error) {
         console.log(error);
         res.sendStatus(400);
