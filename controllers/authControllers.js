@@ -1,4 +1,4 @@
-import db from '../databases/mongodb.js';
+import {db} from '../databases/mongodb.js';
 
 export async function createUser(_, res) {
     try {
@@ -6,7 +6,7 @@ export async function createUser(_, res) {
         res.sendStatus(201);
     } catch (error) {
         console.log(error);
-        res.send(400);
+        res.sendStatus(400);
     }
 }
 

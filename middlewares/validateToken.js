@@ -1,13 +1,13 @@
-import db from "../databases/mongodb.js";
-import {next} from 'express';
+import {db} from "../databases/mongodb.js";
 
-export default async function validateToken (req,res) {
-    const reqToken = req.headers.authorization.replace("Bearer: ","");
-    const foundToken = await db.collection("sessions").findOne({token:reqToken});
-    if(foundToken){
-        res.locals.userID = foundToken._id
-        next()
-    } else {
-        return res.sendStatus(401)
+export default async function validateToken(req, res, next) {
+    let reqToken = req.headers.authorization.replace("Bearer: ","")
+    try {
+        const foundToken = await db.collection("sessions").findOne({ token: reqToken });
+        res.locals.userID = foundToken.userId
+        next()        
+    } catch (error) {
+        console.log(error);
+        return res.sendStatus(401)        
     }
 }

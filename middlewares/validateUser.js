@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import {next} from 'express';
-import userSchema from "../schemas/newUserSchema.js";
+import { db } from '../databases/mongodb.js';
+import userSchema from "../schemas/userSchema.js";
 
-export default function validateUser (req,res) {
+export default async function validateUser(req, res, next) {
     const validation = userSchema.validate(req.body);
-    if(validation.error){
+    if (validation.error) {
         return res.status(422).send(validation.error)
     } else {
         const foundUser = await db.collection("users").findOne({

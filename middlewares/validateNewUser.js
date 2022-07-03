@@ -1,8 +1,7 @@
 import bcrypt from 'bcrypt';
-import { next } from 'express';
 import newUserSchema from "../schemas/newUserSchema.js";
 
-export default function validateNewUser(req, res) {
+export default function validateNewUser(req, res, next) {
     const validation = newUserSchema.validate(req.body)
     if (validation.error) {
         return res.status(422).send(validation.error)
