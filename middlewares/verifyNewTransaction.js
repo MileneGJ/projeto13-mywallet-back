@@ -22,7 +22,6 @@ export default async function verifyNewTransaction(req, res, next) {
                         sum -= parseInt(t.value.replace("R$", "").replace(/\,/,/\./))
                     }
                 });
-                console.log(sum)
                 await db.collection("transactions").updateOne({
                     userID: res.locals.userID
                 }, {
