@@ -2,18 +2,14 @@ import { db } from "../databases/mongodb.js";
 
 export async function createTransaction(_, res) {
     try {
-        if (res.locals.actionTransaction === "insert") {
-            await db.collection("transactions").insertOne(res.locals.newUserTransaction);
-        } else if (res.locals.actionTransaction === "update") {
-            await db.collection("transactions").updateOne({
-                userID: res.locals.userID
-            }, {
-                $set: {
-                    transactions: res.locals.newUserTransaction
-                }
-            });
-        }
-
+        const userTransactions = await db.collection("transactions").findOne({userID: res.locals.userID})
+        await db.collection("transactions").updateOne({
+            userID: res.locals.userID
+        }, {
+            $set: {
+                transactions: [...userTransactions.transactions, res.locals.newTransaction]
+            }
+        });
         return res.sendStatus(201);
     } catch (error) {
         console.log(error);
@@ -23,7 +19,9 @@ export async function createTransaction(_, res) {
 
 export async function listTransactions(_, res) {
     try {
-        const allTransactions = await db.collection("transactions").find().toArray();
+        const allTransactions = await db.collection("transactions").findOne({
+            userID: res.locals.userID
+        });
         return res.send(allTransactions);
     } catch (error) {
         console.log(error);
